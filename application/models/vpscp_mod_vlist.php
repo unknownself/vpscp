@@ -388,6 +388,21 @@ function loaddialog(dialog_name) {$("#"+dialog_name).modal('show');}
   }
   function adminz_options() {
       $option = mysql_real_escape_string($this->input->post('option'));
+      ?>
+        <script>
+        function showcontent(which) {
+          if(which=='slaves') {
+            $("#showedcontent").html('<a class="btn btn-info" onclick="loaddialog(\'slaves\')">Manage Slave Servers</a>');
+          }
+          if(which=='mainconfig') {
+            $("#showedcontent").html('<a class="btn btn-info" onclick="loaddialog(\'mainconfig\')">Manage Site Configuration</a>');
+          }
+          if(which=='staff') {
+            $("#showedcontent").html('<a class="btn btn-info" onclick="loaddialog(\'staff\')">Staff</a>');
+          }
+        }
+        </script>
+      <?php
       if($option=='nodes') {
         /* # Section: NODES # */
 
@@ -402,36 +417,27 @@ function loaddialog(dialog_name) {$("#"+dialog_name).modal('show');}
       } elseif($option=='settings') {
         /* # Section: SETTINGS # */
         ?>
-        <script>function showcontent(which) {
-          if(which=='slaves') {
-            $("#showedcontent").html('<a class="btn btn-info" onclick="loaddialog(\'slaves\')">Manage Slave Servers</a>');
-          }
-          if(which=='mainconfig') {
-            $("#showedcontent").html('<a class="btn btn-info" onclick="loaddialog(\'mainconfig\')">Manage Site Configuration</a>');
-          }
-          if(which=='staff') {
-            $("#showedcontent").html('<a class="btn btn-info" onclick="loaddialog(\'staff\')">Staff</a>');
-          }
-        }
+        <script>
         function addpacket(obj, ad) {
           var docs_obj = 'OBJ as requested div tag object';
           var docs_ad = 'AD as requested packet format [GET/POST]';
           console.log(docs_obj);
           console.log(docs_ad);
           if(obj=='addslave') {
-            var armobj    = '<a onclick="window.location=window.location" class="btn btn-danger">Reload</a><br>Slave Name: <input type="text" name="slavename" id="sln" placeholder="slave<?=rand(5,20)?>"><br>Slave IP Address: <input type="text" name="slaveipmain" id="sipm" placeholder="0.0.0.0"><br>Slave API Authorization key: <input type="text" name="slaveauth" id="sla"><bR>Slave API Backup Authorization key: <input type="text" name="slaveauth2" id="sla2"><br>Node Type: <select id="nodetype"><option>ovz</option><option>kvm</option></select><br><button class="btn btn-success" onclick="sendpacket(\'addslave\', \'post\')">Add Slave</button>';
+            var armobj    = '<a onclick="window.location=window.location" class="btn btn-danger">Reload</a><br>Slave Name: <input type="text" name="slavename" id="sln" placeholder="slave<?=rand(5,20)?>"><br>Slave IP Address: <input type="text" name="slaveipmain" id="sipm" placeholder="0.0.0.0"><br>Slave API Authorization key: <input type="text" name="slaveauth" id="sla"><bR>Slave API Backup Authorization key: <input type="text" name="slaveauth2" id="sla2"><br>Node Type: <select id="nodetype"><option>ovz</option><option>kvm</option></select><br><button class="btn btn-success" onclick="sendpacket_console(\'addslave\', \'post\')">Add Slave</button>';
             var cnts      = $("#main-ph-2");
             var newcnts   = cnts.html(armobj);
           }
         }
-        function sendpacket(cmd, d_packet_params) {
+
+        function sendpacket_console(cmd, d_packet_params) {
           var doc = 'Send packet to controller args:d_packet_params';
           console.log(doc);
-          var cmd_full = {'action': cmd};
+          var typez = d_packet_params.toUpperCase();
           $.ajax({
-            type: d_packet_params.toUpperCase(),
+            type: typez,
             url: "<?=base_url?>site/adminpck",
-            data: cmd_full,
+            data: {'action': cmd},
             cache: false,
             success: function() {
               alert('Success.');
