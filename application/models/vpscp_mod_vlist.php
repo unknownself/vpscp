@@ -412,7 +412,11 @@ function loaddialog(dialog_name) {$("#"+dialog_name).modal('show');}
           if(which=='staff') {
             $("#showedcontent").html('<a class="btn btn-info" onclick="loaddialog(\'staff\')">Staff</a>');
           }
-        }</script>
+        }
+        function addpacket(obj, adp) {
+
+        }
+        </script>
           <h3>Settings</h3>
           <div class="well"><a onclick="showcontent('slaves')" class="btn btn-inverse">Slaves</a> <a onclick="showcontent('staff')" class="btn btn-inverse">Staff</a> <a onclick="showcontent('mainconfig')" class="btn btn-inverse">Site Configuration</a></div>
 
@@ -426,11 +430,15 @@ function loaddialog(dialog_name) {$("#"+dialog_name).modal('show');}
             <h3 id="myModalLabel">Slave Servers</h3>
           </div>
           <div class="modal-body">
-            <p><a onclick="actions_modal('addslave')" class="btn btn-inverse">Add Slave Server</a><br><?php /* Load slave servers */ 
+            <p><a onclick="addpacket('addslave', 'd_rep')" class="btn btn-inverse">Add Slave Server</a><br><?php /* Load slave servers */ 
             $q = $this->db->query('SELECT * FROM vz_slaves');
-            echo $q->num_rows().' slave servers found.';
+            echo $q->num_rows().' slave servers found.<br>';
             foreach($q->result() as $x) {
-              //echo $q->num_rows().' slave servers found.';
+              /* def $x as $x->input in ex $x->name; */
+              if($x->s == 'v') { $cmds = 'sd'; $c = 'danger'; $f = 'Disable'; } else { $cmds = 'su'; $c = 'success'; $f = 'Enable'; }
+              $cton = "'".$cmds."'";
+              $cton_d = "d_send";
+              echo '<b>'.$x->name.'</b> <a onclick="addpacket('.$cton.', '.$cton_d.')" class="btn btn-small btn-'.$c.'">'.$f.'</a><br>';
             }
             ?></p>
           </div>
