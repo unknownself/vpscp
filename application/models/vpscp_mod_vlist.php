@@ -429,20 +429,12 @@ function loaddialog(dialog_name) {$("#"+dialog_name).modal('show');}
             var newcnts   = cnts.html(armobj);
           }
         }
-
-        function sendpacket_console(cmd, d_packet_params) {
-          var doc = 'Send packet to controller args:d_packet_params';
-          console.log(doc);
-          var typez = d_packet_params.toUpperCase();
-          $.ajax({
-            type: typez,
-            url: "<?=base_url?>site/adminpck",
-            data: {'action': cmd},
-            cache: false,
-            success: function() {
-              alert('Success.');
-            }
-          });
+        function sendpacket_console(cmd, method) {
+          if(method=='post' || method=='POST') {
+            var newmethod = 'POST';
+            console.log('METHOD: '+newmethod);
+          }
+          
         }
         </script>
           <h3>Settings</h3>
