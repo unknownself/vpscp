@@ -413,8 +413,30 @@ function loaddialog(dialog_name) {$("#"+dialog_name).modal('show');}
             $("#showedcontent").html('<a class="btn btn-info" onclick="loaddialog(\'staff\')">Staff</a>');
           }
         }
-        function addpacket(obj, adp) {
-
+        function addpacket(obj, ad) {
+          var docs_obj = 'OBJ as requested div tag object';
+          var docs_ad = 'AD as requested packet format [GET/POST]';
+          console.log(docs_obj);
+          console.log(docs_ad);
+          if(obj=='addslave') {
+            var armobj    = '<a onclick="window.location=window.location" class="btn btn-danger">Reload</a><br>Slave Name: <input type="text" name="slavename" id="sln" placeholder="slave<?=rand(5,20)?>"><br>Slave IP Address: <input type="text" name="slaveipmain" id="sipm" placeholder="0.0.0.0"><br>Slave API Authorization key: <input type="text" name="slaveauth" id="sla"><bR>Slave API Backup Authorization key: <input type="text" name="slaveauth2" id="sla2"><br>Node Type: <select id="nodetype"><option>ovz</option><option>kvm</option></select><br><button class="btn btn-success" onclick="sendpacket(\'addslave\', \'post\')">Add Slave</button>';
+            var cnts      = $("#main-ph-2");
+            var newcnts   = cnts.html(armobj);
+          }
+        }
+        function sendpacket(cmd, d_packet_params) {
+          var doc = 'Send packet to controller args:d_packet_params';
+          console.log(doc);
+          var cmd_full = {'action': cmd};
+          $.ajax({
+            type: d_packet_params.toUpperCase(),
+            url: "<?=base_url?>site/adminpck",
+            data: cmd_full,
+            cache: false,
+            success: function() {
+              alert('Success.');
+            }
+          });
         }
         </script>
           <h3>Settings</h3>
@@ -430,21 +452,25 @@ function loaddialog(dialog_name) {$("#"+dialog_name).modal('show');}
             <h3 id="myModalLabel">Slave Servers</h3>
           </div>
           <div class="modal-body">
-            <p><a onclick="addpacket('addslave', 'd_rep')" class="btn btn-inverse">Add Slave Server</a><br><?php /* Load slave servers */ 
-            $q = $this->db->query('SELECT * FROM vz_slaves');
-            echo $q->num_rows().' slave servers found.<br>';
-            foreach($q->result() as $x) {
-              /* def $x as $x->input in ex $x->name; */
-              if($x->s == 'v') { $cmds = 'sd'; $c = 'danger'; $f = 'Disable'; } else { $cmds = 'su'; $c = 'success'; $f = 'Enable'; }
-              $cton = "'".$cmds."'";
-              $cton_d = "d_send";
-              echo '<b>'.$x->name.'</b> <a onclick="addpacket('.$cton.', '.$cton_d.')" class="btn btn-small btn-'.$c.'">'.$f.'</a><br>';
-            }
-            ?></p>
+            <p><a onclick="addpacket('addslave', 'post')" class="btn btn-inverse">Add Slave Server</a><br><?php /* Load slave servers */ 
+            ?>
+              <div id="content_main">
+                <div id="main-ph-2">
+                  <?php $q = $this->db->query('SELECT * FROM vz_slaves');
+                    echo $q->num_rows().' slave servers found.<br>';
+                    foreach($q->result() as $x) {
+                      /* def $x as $x->input in ex $x->name; */
+                      if($x->s == 'v') { $cmds = 'sd'; $c = 'danger'; $f = 'Disable'; } else { $cmds = 'su'; $c = 'success'; $f = 'Enable'; }
+                      $cton = "'".$cmds."'";
+                      $cton_d = "d_send";
+                      echo '<b>'.$x->name.'</b> <a onclick="sendpacket('.$cton.', '.$cton_d.')" class="btn btn-small btn-'.$c.'">'.$f.'</a><br>';
+                    }
+                    ?></p>
+                </div>
+              </div>
           </div>
           <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            <button class="btn btn-primary">Save changes</button>
           </div>
         </div>
         <div id="mainconfig" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="mainconfig" aria-hidden="true">
