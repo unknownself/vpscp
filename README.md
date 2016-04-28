@@ -8,12 +8,3 @@ Login, view servers, manage server.
 Admin area - view configuration and slave count.
 
 We will be pushing updates as we make them.
-
-If you'd like to donate (which helps us fund the development), our paypal address is:
-allpaymentsdot@gmail.com
-
-Payza:
-tnrz@null.net
-
-Other:
-email allpaymentsdot@gmail.com
